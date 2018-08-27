@@ -1,14 +1,10 @@
 var { runWeb, webApp } = require('../src/index');
+const config = require('../config.json');
+const path = require('path');
 
 runWeb({
-    mysqlConfig: {
-        host: 'localhost',
-        port: '3306',
-        user: 'root',
-        password: '1234',
-        database: 'db_schedule'
-    },
-    taskRootPath: __dirname + '/task',
+    mysqlConfig: config.mysql,
+    taskRootPath: path.join(config.basePath,config.taskRootPath),
     port: 8017,
     oauthLogin: function () {
         var MOCK_USER;
