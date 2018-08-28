@@ -7,5 +7,6 @@
         "database": "db_schedule"
     },
     "taskRootPath": "./example/task",
-    "basePath": "/Users/jiang/Repo/TFSchedule/"
+    "basePath": "/Users/jiang/Repo/TFSchedule/",
+    "notifyList": "1048911681@qq.com"
 }

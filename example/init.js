@@ -2,13 +2,15 @@ var { TFSchedule } = require('../src/index');
 const config = require('../config.json');
 const path = require('path');
 
+console.log('config',config);
+
 var scheHandle = new TFSchedule({
     backExecRecordNum: 1,
     mysqlConfig: config.mysql,
     entryFile: 'index.js', // 设置默认的入口文件
     command: 'node', // 设置默认的执行器
     taskRootPath: path.join(config.basePath,config.taskRootPath),
-    notifyList: ''
+    notifyList: config.notifyList
 });
 scheHandle.on('notify', function(notifyInfo) {
     var { type, title, content, notifyList } = notifyInfo;
