@@ -46,9 +46,8 @@ function* bindEvent() {
         }
         that.emit('notify', { type: 'systemError', title: errMsg, content, notifyList: that.notifyList });
     });
-    this.on('notify', ({ title, content, notifyList }) => {
-        notifyList = notifyList || that.notifyList;
-        console.warn('#notify#', title, content, notifyList);
+    this.on('notify', ({ type, title, content, notifyList }) => {
+        console.warn(`#notify ${type}#`, title, content, notifyList);
     });
 }
 

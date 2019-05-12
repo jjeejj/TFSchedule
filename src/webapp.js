@@ -8,6 +8,8 @@ const wrap = require('co-express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const parser = require('cron-parser');
+
 var srcPath = __dirname;
 /*
     参数设置
@@ -115,6 +117,13 @@ function bindCgi() {
         var valueList = [];
         var sqlTpl, sql;
 
+        var {isValidate, errMsg} = checkValidateTask(taskInfo);
+        if (!isValidate) {
+            return res.json({
+                retcode: -1,
+                retmsg: errMsg
+            });
+        }
         // 赋值操作人员
         if (res.locals && res.locals.userInfo && res.locals.userInfo.LoginName) {
             taskInfo.operator = res.locals.userInfo.LoginName;
@@ -135,6 +144,7 @@ function bindCgi() {
             // 更新任务
             const taskName = taskInfo.taskName;
             delete taskInfo.taskName;
+            taskInfo.modify_time = moment().format('YYYY-MM-DD HH:mm:ss');
             if (!taskName) {
                 return res.json({ retcode: 1, retmsg: '请输入任务名称' });
             }
@@ -163,6 +173,24 @@ function bindCgi() {
         }
         res.json({ retcode: 0 });
     }));
+}
+/**
+ * @description 检查任务是否有效
+ *  */
+function checkValidateTask(taskInfo) {
+    try {
+        const {
+            rule
+        } = taskInfo;
+        // 校验任务规则是否可以解析
+        if (rule) {
+            parser.parseExpression(rule);
+        }
+    } catch (err) {
+        console.error(err);
+        return {isValidate: false, errMsg: err.message};
+    }
+    return {isValidate: true};
 }
 // 获取对应选项列表
 function* getSelectConfig(whereSql) {
